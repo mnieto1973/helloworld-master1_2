@@ -15,7 +15,7 @@ pipeline
                steps {
                    catchError(buildResult:'UNSTABLE',stageResult:'FAILURE'){
                      echo workspace
-                     sh '''
+                     bat '''
                          whoami
                          hostname
                         set PYTHONPATH=%WORKSPACE%
