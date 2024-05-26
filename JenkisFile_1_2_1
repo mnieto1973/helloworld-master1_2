@@ -1,0 +1,77 @@
+pipeline 
+{
+    agent
+     {
+        label 'windows'
+    }
+    stages 
+    {
+         stage('Tests'){
+            parallel{
+                 stage('Unit') {
+                      agent{
+             label 'windows'
+         }
+               steps {
+                   catchError(buildResult:'UNSTABLE',stageResult:'FAILURE'){
+                     echo workspace
+                     sh '''
+                         whoami
+                         hostname
+                        set PYTHONPATH=%WORKSPACE%
+                        pytest --junitxml=result.unit.xml test/unit
+                        '''
+                  stash includes: 'result.unit.xml', name: 'resultUnit'
+                   }
+               
+               }
+            }
+                stage('Rest') {
+                      agent{
+             label 'windows'
+         }
+               steps {
+                script {
+                    def maxRetries = 3
+                    def retryCount = 0
+                    def success = false
+
+                    retry(maxRetries) {
+                         echo workspace
+                        
+                        bat '''
+                         whoami
+                         hostname
+                         set FLASK_APP=app\\api.py
+                         start flask run
+                         start java -jar C:\\desarrollo\\librerias\\wiremock\\wiremock-standalone-3.5.4.jar --verbose --port 9090 --root-dir test\\wiremock
+                        set PYTHONPATH=%WORKSPACE%
+                        pytest --junitxml=result.rest.xml test/rest
+                  '''   
+                  
+                    stash includes: 'result.rest.xml', name: 'resultRest'    
+                        catchError { err ->
+                            if (err instanceof hudson.remoting.RequestAbortedException) {
+                                // Captura el error de tiempo de espera y reintentar
+                                retryCount++
+                                echo "Error de tiempo de espera detectado, reintentando (${retryCount}/${maxRetries})"
+                                throw err // Lanzar de nuevo el error para que se ejecute el reintentar
+                            } 
+                        }
+
+                        // El paso se ejecutó correctamente
+                        success = true
+                    }
+
+                    if (!success) {
+                        error "El paso no se pudo completar después de $maxRetries reintentos."
+                    }
+                }
+            }
+
+            }
+
+            }
+        }
+    }
+}
