@@ -38,7 +38,7 @@ pipeline
                          whoami
                          hostname
                         set PYTHONPATH=%WORKSPACE%
-                       coverage run --branch --source=app --omit=app\_init_py,app\api.py -m pytest test\unit --junitxml=result.unit.xml
+                       coverage run --branch --source=app --omit=app\\_init_py,app\\api.py -m pytest test\\unit --junitxml=result.unit.xml
                        coverage xml
                        cobertura coberturaReportFile: 'coverage.xml'
                         '''
