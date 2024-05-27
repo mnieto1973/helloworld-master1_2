@@ -24,9 +24,10 @@ pipeline
 
             }
         }
+
          stage('Tests'){
             parallel{
-                 stage('Unit') {
+                 stage('Cobertura') {
                       agent{
              label 'windows'
          }
@@ -37,9 +38,24 @@ pipeline
                          whoami
                          hostname
                         set PYTHONPATH=%WORKSPACE%
-                        pytest --junitxml=result.unit.xml test/unit
+                       coverage run --branch --source=app --omit=app\_init_py,app\api.py -m pytest test\unit --junitxml=result.unit.xml
+                       coverage xml
+                       cobertura coberturaReportFile: 'coverage.xml'
                         '''
                   stash includes: 'result.unit.xml', name: 'resultUnit'
+                   }
+               
+               }
+            }
+                 stage('Unit') {
+                      agent{
+             label 'windows'
+         }
+               steps {
+                   catchError(buildResult:'UNSTABLE',stageResult:'FAILURE'){
+                     echo workspace
+                     unstash 'resultUnit'
+                      junit 'result.unit.xml'
                    }
                
                }
@@ -67,7 +83,7 @@ pipeline
                         pytest --junitxml=result.rest.xml test/rest
                   '''   
                   
-                    stash includes: 'result.rest.xml', name: 'resultRest'    
+                      junit 'result.rest.xml' 
                         catchError { err ->
                             if (err instanceof hudson.remoting.RequestAbortedException) {
                                 // Captura el error de tiempo de espera y reintentar
