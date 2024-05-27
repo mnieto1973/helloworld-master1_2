@@ -40,9 +40,10 @@ pipeline
                         set PYTHONPATH=%WORKSPACE%
                        coverage run --branch --source=app --omit=app\\_init_py,app\\api.py -m pytest test\\unit --junitxml=result.unit.xml
                        coverage xml
-                       cobertura coberturaReportFile: 'coverage.xml'
+                       
                         '''
-                  stash includes: 'result.unit.xml', name: 'resultUnit'
+                   stash includes: 'result.unit.xml', name: 'resultUnit'
+                   cobertura coberturaReportFile: 'coverage.xml'
                    }
                
                }
