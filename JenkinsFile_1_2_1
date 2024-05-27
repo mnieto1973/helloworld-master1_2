@@ -25,7 +25,7 @@ pipeline
             }
         }
 
-         stage('Tests'){
+         stage('Pruebas Funcionales Unitarias'){
             parallel{
                  stage('Cobertura') {
                       agent{
