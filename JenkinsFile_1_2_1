@@ -25,9 +25,7 @@ pipeline
             }
         }
 
-         stage('Pruebas Funcionales Unitarias'){
-            parallel{
-                 stage('Cobertura') {
+          stage('Cobertura') {
                       agent{
              label 'windows'
          }
@@ -49,7 +47,8 @@ pipeline
                
                }
             }
-                 stage('Unit') {
+
+             stage('Unit') {
                       agent{
              label 'windows'
          }
@@ -62,7 +61,8 @@ pipeline
                
                }
             }
-                stage('Rest') {
+
+ stage('Rest') {
                       agent{
              label 'windows'
          }
@@ -107,8 +107,6 @@ pipeline
 
             }
 
-            }
-        }
     }
     
 }
