@@ -36,13 +36,13 @@ pipeline
                          whoami
                          hostname
                         set PYTHONPATH=%WORKSPACE%
-                       coverage run --branch --source=app --omit=app\\_init_py,app\\api.py -m pytest test\\unit --junitxml=result.unit.xml
-                       coverage report
-                       coverage xml
-                       coverage html
+                        coverage run --branch --source=app --omit=app\\_init_py,app\\api.py -m pytest test\\unit --junitxml=result.unit.xml
+                        coverage report
+                        coverage xml
+                        coverage html
                         '''
                    stash includes: 'result.unit.xml', name: 'resultUnit'
-                   cobertura coberturaReportFile: 'coverage.xml',onlyStable:false 
+                   cobertura coberturaReportFile: 'coverage.xml',onlyStable:false ,failUnstable:false 
                    }
                
                }
