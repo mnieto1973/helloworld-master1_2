@@ -39,11 +39,12 @@ pipeline
                          hostname
                         set PYTHONPATH=%WORKSPACE%
                        coverage run --branch --source=app --omit=app\\_init_py,app\\api.py -m pytest test\\unit --junitxml=result.unit.xml
+                       coverage report
                        coverage xml
-                       
+                       coverage html
                         '''
                    stash includes: 'result.unit.xml', name: 'resultUnit'
-                   cobertura coberturaReportFile: 'coverage.xml'
+                   cobertura coberturaReportFile: 'coverage.xml',onlyStable:false 
                    }
                
                }
