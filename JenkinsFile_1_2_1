@@ -42,7 +42,7 @@ pipeline
                         coverage html
                         '''
                    stash includes: 'result.unit.xml', name: 'resultUnit'
-                   cobertura coberturaReportFile: 'coverage.xml',onlyStable:false ,failUnstable:false ,conditionalCoverageTargets:'100,90,80' ,lineCoverageTargets: '100,85,95'
+                   cobertura coberturaReportFile: 'coverage.xml',onlyStable:false ,failUnhealthy: false,failUnstable:false ,conditionalCoverageTargets:'100,90,80' ,lineCoverageTargets: '100,85,95'
                    }
                
                }
