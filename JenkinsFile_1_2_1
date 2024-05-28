@@ -154,5 +154,7 @@ stage ('Rendimiento'){
 }
 
     }
-    
+    post {
+        cleanWs()
+    }
 }
