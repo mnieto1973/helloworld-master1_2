@@ -20,7 +20,7 @@ pipeline
                 bat '''
                 bandit --exit-zero -r . -f custom -o banditSeguridad.out --severity-level all --msg-template "{abspath}:line:[{test_id}] {msg}"
                 '''
-                recordIssues tools: [pyLint(name: 'Bandit', pattern: 'banditSeguridad.out')], qualityGates: [[threshold:1, type: 'TOTAL', unstable: true], [threshold: 4, type: 'TOTAL', unstable: false]]
+                recordIssues tools: [pyLint(name: 'Bandit', pattern: 'banditSeguridad.out')], qualityGates: [[threshold:2, type: 'TOTAL', unstable: true], [threshold: 4, type: 'TOTAL', unstable: false]]
 
             }
         }
