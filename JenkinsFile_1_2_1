@@ -1,4 +1,4 @@
-pipeline 
+'',,pipeline 
 {
     agent
      {
@@ -42,7 +42,7 @@ pipeline
                         coverage html
                         '''
                    stash includes: 'result.unit.xml', name: 'resultUnit'
-                   cobertura coberturaReportFile: 'coverage.xml',onlyStable:false ,failUnstable:false 
+                   cobertura coberturaReportFile: 'coverage.xml',onlyStable:false ,failUnstable:false ,conditionalCoverageTargets:'95,90,70' ,lineCoverageTargets: '95,90,70'
                    }
                
                }
