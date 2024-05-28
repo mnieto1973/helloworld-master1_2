@@ -113,7 +113,12 @@ stage ('Rendimiento'){
          }
          steps {
              catchError(buildResult:'UNSTABLE',stageResult:'FAILURE'){
-                bat 'C:\\aplicaciones\\apache-jmeter-5.6.3\\apache-jmeter-5.6.3\\bin\\jmeter -n -t test\\jmeter\\flask.jmx -f -l flask.jtl'
+                bat '''
+                 set PYTHONPATH=%WORKSPACE%
+                         set FLASK_APP=app\\api.py
+                         start flask run
+                C:\\aplicaciones\\apache-jmeter-5.6.3\\apache-jmeter-5.6.3\\bin\\jmeter -n -t test\\jmeter\\flask.jmx -f -l flask.jtl
+                '''
                 perfReport sourceDataFiles: 'flask.jtl'
              }
 
