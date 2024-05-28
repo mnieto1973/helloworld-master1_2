@@ -41,7 +41,7 @@ pipeline
                         coverage xml
                         '''
                     catchError(buildResult:'UNSTABLE',stageResult:'FAILURE'){
-                   cobertura coberturaReportFile: 'coverage.xml',failNoReports: true, failUnhealthy: false,failUnstable:false ,conditionalCoverageTargets:'80,90,100' ,lineCoverageTargets: '80,90,100',onlyStable:false 
+                   cobertura coberturaReportFile: 'coverage.xml',failNoReports: true, failUnhealthy: false,failUnstable:false ,conditionalCoverageTargets:'100,85,95' ,lineCoverageTargets: '100,80,90',onlyStable:false 
                     stash includes: 'result.unit.xml', name: 'resultUnit'
                    }
                
