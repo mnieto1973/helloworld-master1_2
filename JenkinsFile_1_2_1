@@ -39,8 +39,9 @@ pipeline
                         coverage run --branch --source=app --omit=app\\_init_py,app\\api.py -m pytest test\\unit --junitxml=result.unit.xml
                         coverage xml
                         '''
-                   stash includes: 'result.unit.xml', name: 'resultUnit'
+                  
                    cobertura coberturaReportFile: 'coverage.xml',onlyStable:false ,failUnhealthy: false,failUnstable:false ,conditionalCoverageTargets:'100,90,80' ,lineCoverageTargets: '100,95,85'
+                    stash includes: 'result.unit.xml', name: 'resultUnit'
                    }
                
                }
