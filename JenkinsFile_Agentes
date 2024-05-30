@@ -31,7 +31,7 @@ pipeline
             steps {
                 sh '''
                   whoami
-                  hostname
+                 hostname
                 bandit --exit-zero -r . -f custom -o banditSeguridad.out --severity-level all --msg-template "{abspath}:line:[{test_id}] {msg}"
                 '''
                 recordIssues tools: [pyLint(name: 'Bandit', pattern: 'banditSeguridad.out')], qualityGates: [[threshold:2, type: 'TOTAL', unstable: true], [threshold: 4, type: 'TOTAL', unstable: false]]
@@ -170,13 +170,14 @@ stage ('Rendimiento'){
     }
     post {
         always{
-            script{
-               // Limpiar el espacio de trabajo de todos los agentes utilizados
-                     nodesUsed.unique().each { nodeName ->
-                   node(nodeName) {
+         script  {
+             // Limpiar el espacio de trabajo de todos los agentes utilizados
+            nodesUsed.unique().each { nodeName ->
+                node(nodeName) {
                     cleanWs()
                 }
-        }
+            }
+         }
         }
        
     }
