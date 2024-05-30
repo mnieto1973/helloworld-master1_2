@@ -13,6 +13,7 @@ pipeline
              label 'kaliSeguridad'
          }
             steps {
+                 nodesUsed.add(env.NODE_NAME)
                 sh '''
                   whoami
                  hostname
@@ -44,7 +45,7 @@ pipeline
              label 'windows'
          }
                steps {
-                 
+                   nodesUsed.add(env.NODE_NAME)
                      echo workspace
                      bat '''
                          whoami
