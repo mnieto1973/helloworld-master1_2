@@ -7,10 +7,11 @@ pipeline
     stages 
     {
         stage ('Codigo estatico')
-         agent{
+        
+        {
+             agent{
              label 'kaliSeguridad'
          }
-        {
             steps {
                 sh '''
                 flake8 --exit-zero --format=pylint app>flake8.out
@@ -20,10 +21,11 @@ pipeline
             }
         }
          stage ('Seguridad')
-         agent{
+        
+         {
+             agent{
              label 'kaliSeguridad'
          }
-         {
             steps {
                 sh '''
                 bandit --exit-zero -r . -f custom -o banditSeguridad.out --severity-level all --msg-template "{abspath}:line:[{test_id}] {msg}"
