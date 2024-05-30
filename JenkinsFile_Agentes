@@ -62,7 +62,7 @@ pipeline
                      sh '''
                          whoami
                          hostname
-                         export PYTHONPATH=.:$PYTHONPATH
+                       
                         coverage run --branch --source=app --omit=app\\_init_py,app\\api.py -m pytest test\\unit --junitxml=result.unit.xml
                         coverage report 
                         coverage xml
