@@ -107,7 +107,7 @@ pipeline
                         bat '''
                          whoami
                          hostname
-                         set PYTHONPATH=%WORKSPACE%
+                        set PYTHONPATH=%WORKSPACE%
                          set FLASK_APP=app\\api.py
                          start flask run
                          start java -jar C:\\desarrollo\\librerias\\wiremock\\wiremock-standalone-3.5.4.jar --verbose --port 9090 --root-dir test\\wiremock
@@ -138,7 +138,7 @@ pipeline
             }
 stage ('Rendimiento'){
       agent{
-             label 'windows'
+             label 'kaliblue'
          }
          steps {script {
                     def maxRetries = 3
@@ -148,17 +148,14 @@ stage ('Rendimiento'){
                     retry(maxRetries) {
                          echo workspace
                         
-                        bat '''
+                        sh '''
                          whoami
                          hostname
-                         set PYTHONPATH=%WORKSPACE%
-                         set FLASK_APP=app\\api.py
+                         export PYTHONPATH=.:$PYTHONPATH
+                         
+                         set FLASK_APP=app/api.py
                          start flask run
-                         start java -jar C:\\desarrollo\\librerias\\wiremock\\wiremock-standalone-3.5.4.jar --verbose --port 9090 --root-dir test\\wiremock
-                         set PYTHONPATH=%WORKSPACE%
-                         set FLASK_APP=app\\api.py
-                         start flask run
-                         C:\\aplicaciones\\apache-jmeter-5.6.3\\apache-jmeter-5.6.3\\bin\\jmeter -n -t test\\jmeter\\flask.jmx -f -l flask.jtl
+                         /home/fireblade/apache-jmeter-5.6.3/apache-jmeter-5.6.3/bin/jmeter -n -t test/jmeter/flask.jmx -f -l flask.jtl
                   '''   
                   
                        perfReport sourceDataFiles: 'flask.jtl'
