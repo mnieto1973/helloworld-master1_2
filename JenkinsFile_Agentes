@@ -54,12 +54,12 @@ pipeline
         }
           stage('Cobertura') {
                       agent{
-             label 'kaliSeguridad'
+             label 'windows'
          }
                steps {
                 
                      echo workspace
-                     sh '''
+                     bat '''
                          whoami
                          hostname
                        
@@ -78,7 +78,7 @@ pipeline
 
              stage('Unit') {
                       agent{
-             label 'kaliSeguridad'
+             label 'windows'
          }
                steps {
                    catchError(buildResult:'UNSTABLE',stageResult:'FAILURE'){
