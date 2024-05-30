@@ -170,7 +170,13 @@ stage ('Rendimiento'){
     }
     post {
         always{
- cleanWs()
+            script{
+               // Limpiar el espacio de trabajo de todos los agentes utilizados
+                     nodesUsed.unique().each { nodeName ->
+                   node(nodeName) {
+                    cleanWs()
+                }
+        }
         }
        
     }
