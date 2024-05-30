@@ -30,7 +30,7 @@ pipeline
         
          {
              agent{
-             label 'kaliCoberturaUnit'
+             label 'kaliSeguridad'
          }
             steps {
                 sh '''
@@ -54,7 +54,7 @@ pipeline
         }
           stage('Cobertura') {
                       agent{
-             label 'windows'
+             label 'kaliCoberturaUnit'
          }
                steps {
                 
@@ -78,7 +78,7 @@ pipeline
 
              stage('Unit') {
                       agent{
-             label 'windows'
+              label 'kaliCoberturaUnit'
          }
                steps {
                    catchError(buildResult:'UNSTABLE',stageResult:'FAILURE'){
