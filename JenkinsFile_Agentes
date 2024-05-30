@@ -73,13 +73,7 @@ pipeline
                    }
                
                }
-                post {
-                always {
-                    echo 'All parallel tasks are done'
-                    // Aquí puedes poner cualquier paso que quieras ejecutar al final de los paralelos
-                    cleanWs()
-                }
-            }
+               
             }
 
              stage('Unit') {
