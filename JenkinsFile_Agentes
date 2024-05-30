@@ -54,7 +54,7 @@ pipeline
         }
           stage('Cobertura') {
                       agent{
-             label 'kaliCoberturaUnit'
+             label 'kaliblue'
          }
                steps {
                 
@@ -78,7 +78,7 @@ pipeline
 
              stage('Unit') {
                       agent{
-             label 'kaliCoberturaUnit'
+             label 'kaliblue'
          }
                steps {
                    catchError(buildResult:'UNSTABLE',stageResult:'FAILURE'){
