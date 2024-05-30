@@ -30,7 +30,7 @@ pipeline
         
          {
              agent{
-             label 'kaliSeguridad'
+             label 'kaliCobertura'
          }
             steps {
                 sh '''
