@@ -153,8 +153,8 @@ stage ('Rendimiento'){
                          hostname
                          export PYTHONPATH=.:$PYTHONPATH
                          
-                         set FLASK_APP=app/api.py
-                         start flask run
+                         export FLASK_APP=app/api.py
+                         python -m flask run
                          /home/fireblade/apache-jmeter-5.6.3/apache-jmeter-5.6.3/bin/jmeter -n -t test/jmeter/flask.jmx -f -l flask.jtl
                   '''   
                   
@@ -164,7 +164,7 @@ stage ('Rendimiento'){
                                 // Captura el error de tiempo de espera y reintentar
                                 retryCount++
                                 echo "Error de tiempo de espera detectado, reintentando (${retryCount}/${maxRetries})"
-                                throw err // Lanzar de nuevo el error para que se ejecute el reintentar
+                                throw err // Lanzar derror para que se ejecute el reintentar
                             } 
                         }
 
