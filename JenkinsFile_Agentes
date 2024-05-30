@@ -1,0 +1,171 @@
+pipeline 
+{
+    agent
+     {
+        label 'windows'
+    }
+    stages 
+    {
+        stage ('Codigo estatico')
+         agent{
+             label 'kaliSeguridad'
+         }
+        {
+            steps {
+                sh '''
+                flake8 --exit-zero --format=pylint app>flake8.out
+                '''
+                recordIssues tools: [flake8(name: 'Flake8', pattern: 'flake8.out')], qualityGates: [[threshold:8, type: 'TOTAL', unstable: true], [threshold: 10, type: 'TOTAL', unstable: false]]
+
+            }
+        }
+         stage ('Seguridad')
+         agent{
+             label 'kaliSeguridad'
+         }
+         {
+            steps {
+                sh '''
+                bandit --exit-zero -r . -f custom -o banditSeguridad.out --severity-level all --msg-template "{abspath}:line:[{test_id}] {msg}"
+                '''
+                recordIssues tools: [pyLint(name: 'Bandit', pattern: 'banditSeguridad.out')], qualityGates: [[threshold:2, type: 'TOTAL', unstable: true], [threshold: 4, type: 'TOTAL', unstable: false]]
+
+            }
+        }
+
+          stage('Cobertura') {
+                      agent{
+             label 'windows'
+         }
+               steps {
+                 
+                     echo workspace
+                     bat '''
+                         whoami
+                         hostname
+                        set PYTHONPATH=%WORKSPACE%
+                        coverage run --branch --source=app --omit=app\\_init_py,app\\api.py -m pytest test\\unit --junitxml=result.unit.xml
+                        coverage report 
+                        coverage xml
+                        '''
+                    catchError(buildResult:'UNSTABLE',stageResult:'FAILURE'){
+                   cobertura coberturaReportFile: 'coverage.xml',failNoReports: true, failUnhealthy: false,failUnstable:false ,conditionalCoverageTargets:'100,85,95' ,lineCoverageTargets: '100,80,90',onlyStable:false 
+                    stash includes: 'result.unit.xml', name: 'resultUnit'
+                   }
+               
+               }
+            }
+
+             stage('Unit') {
+                      agent{
+             label 'windows'
+         }
+               steps {
+                   catchError(buildResult:'UNSTABLE',stageResult:'FAILURE'){
+                     echo workspace
+                     unstash 'resultUnit'
+                      junit 'result.unit.xml'
+                   }
+               
+               }
+            }
+
+ stage('Rest') {
+                      agent{
+             label 'windows'
+         }
+               steps {
+                script {
+                    def maxRetries = 3
+                    def retryCount = 0
+                    def success = false
+
+                    retry(maxRetries) {
+                         echo workspace
+                        
+                        bat '''
+                         whoami
+                         hostname
+                         set PYTHONPATH=%WORKSPACE%
+                         set FLASK_APP=app\\api.py
+                         start flask run
+                         start java -jar C:\\desarrollo\\librerias\\wiremock\\wiremock-standalone-3.5.4.jar --verbose --port 9090 --root-dir test\\wiremock
+                        set PYTHONPATH=%WORKSPACE%
+                        pytest --junitxml=result.rest.xml test/rest
+                  '''   
+                  
+                      junit 'result.rest.xml' 
+                        catchError { err ->
+                            if (err instanceof hudson.remoting.RequestAbortedException) {
+                                // Captura el error de tiempo de espera y reintentar
+                                retryCount++
+                                echo "Error de tiempo de espera detectado, reintentando (${retryCount}/${maxRetries})"
+                                throw err // Lanzar de nuevo el error para que se ejecute el reintentar
+                            } 
+                        }
+
+                        // El paso se ejecutó correctamente
+                        success = true
+                    }
+
+                    if (!success) {
+                        error "El paso no se pudo completar después de $maxRetries reintentos."
+                    }
+                }
+            }
+
+            }
+stage ('Rendimiento'){
+      agent{
+             label 'windows'
+         }
+         steps {script {
+                    def maxRetries = 3
+                    def retryCount = 0
+                    def success = false
+
+                    retry(maxRetries) {
+                         echo workspace
+                        
+                        bat '''
+                         whoami
+                         hostname
+                         set PYTHONPATH=%WORKSPACE%
+                         set FLASK_APP=app\\api.py
+                         start flask run
+                         start java -jar C:\\desarrollo\\librerias\\wiremock\\wiremock-standalone-3.5.4.jar --verbose --port 9090 --root-dir test\\wiremock
+                         set PYTHONPATH=%WORKSPACE%
+                         set FLASK_APP=app\\api.py
+                         start flask run
+                         C:\\aplicaciones\\apache-jmeter-5.6.3\\apache-jmeter-5.6.3\\bin\\jmeter -n -t test\\jmeter\\flask.jmx -f -l flask.jtl
+                  '''   
+                  
+                       perfReport sourceDataFiles: 'flask.jtl'
+                        catchError { err ->
+                            if (err instanceof hudson.remoting.RequestAbortedException) {
+                                // Captura el error de tiempo de espera y reintentar
+                                retryCount++
+                                echo "Error de tiempo de espera detectado, reintentando (${retryCount}/${maxRetries})"
+                                throw err // Lanzar de nuevo el error para que se ejecute el reintentar
+                            } 
+                        }
+
+                        // El paso se ejecutó correctamente
+                        success = true
+                    }
+
+                    if (!success) {
+                        error "El paso no se pudo completar después de $maxRetries reintentos."
+                    }
+                }
+         }
+}
+
+    }
+    post {
+        always{
+ cleanWs()
+        }
+       
+    }
+}
