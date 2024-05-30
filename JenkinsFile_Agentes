@@ -6,6 +6,8 @@ pipeline
     }
     stages 
     {
+        stage('Seguridad'){
+            parallel{
         stage ('Codigo estatico')
         
         {
@@ -37,10 +39,18 @@ pipeline
                 bandit --exit-zero -r . -f custom -o banditSeguridad.out --severity-level all --msg-template "{abspath}:line:[{test_id}] {msg}"
                 '''
                 recordIssues tools: [pyLint(name: 'Bandit', pattern: 'banditSeguridad.out')], qualityGates: [[threshold:2, type: 'TOTAL', unstable: true], [threshold: 4, type: 'TOTAL', unstable: false]]
-                cleanWs()
+               
             }
         }
-
+         post {
+                always {
+                    echo 'All parallel tasks are done'
+                    // Aquí puedes poner cualquier paso que quieras ejecutar al final de los paralelos
+                    cleanWs()
+                }
+            }
+            }
+        }
           stage('Cobertura') {
                       agent{
              label 'windows'
