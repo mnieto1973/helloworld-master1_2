@@ -59,7 +59,7 @@ pipeline
                steps {
                 
                      echo workspace
-                     bat '''
+                     sh '''
                          whoami
                          hostname
                        
