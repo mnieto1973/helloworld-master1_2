@@ -48,13 +48,13 @@ pipeline
                 always {
                     echo 'All parallel tasks are done'
                     // Aquí puedes poner cualquier paso que quieras ejecutar al final de los paralelos
-                    cleanWs()
+                    //cleanWs()
                 }
             }
         }
           stage('Cobertura') {
                       agent{
-             label 'kaliblue'
+             label 'kaliSeguridad'
          }
                steps {
                 
@@ -78,7 +78,7 @@ pipeline
 
              stage('Unit') {
                       agent{
-             label 'kaliblue'
+             label 'kaliSeguridad'
          }
                steps {
                    catchError(buildResult:'UNSTABLE',stageResult:'FAILURE'){
