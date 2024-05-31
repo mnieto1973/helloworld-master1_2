@@ -96,7 +96,7 @@ pipeline
 
             }
 
- stage('Analisis codigo'){
+ stage('Rest y Rendimiento'){
             parallel{
 
  stage('Rest') {
