@@ -6,7 +6,7 @@ pipeline
     }
     stages 
     {
-        stage('Seguridad'){
+        stage('Analisis codigo'){
             parallel{
         stage ('Codigo estatico')
         
