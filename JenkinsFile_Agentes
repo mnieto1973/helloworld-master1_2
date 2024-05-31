@@ -48,7 +48,7 @@ pipeline
                 always {
                     echo 'All parallel tasks are done'
                     // Aquí puedes poner cualquier paso que quieras ejecutar al final de los paralelos
-                    //cleanWs()
+                    cleanWs()
                 }
             }
         }
@@ -127,6 +127,7 @@ pipeline
 
                         // El paso se ejecutó correctamente
                         success = true
+                       
                     }
 
                     if (!success) {
@@ -173,6 +174,7 @@ stage ('Rendimiento'){
                         perfReport sourceDataFiles: 'flask.jtl'
                         // El paso se ejecutó correctamente
                         success = true
+                        cleanWs()
                     }
 
                     if (!success) {
