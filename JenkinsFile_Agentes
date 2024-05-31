@@ -16,7 +16,7 @@ pipeline
          }
             steps {
               
-                
+                 echo workspace
                 sh '''
                   whoami
                  hostname
@@ -33,6 +33,7 @@ pipeline
              label 'kaliSeguridad'
          }
             steps {
+                echo workspace
                 sh '''
                   whoami
                  hostname
@@ -83,6 +84,10 @@ pipeline
                steps {
                    catchError(buildResult:'UNSTABLE',stageResult:'FAILURE'){
                      echo workspace
+                     sh '''
+                     whoami
+                     hostname
+                     '''
                      unstash 'resultUnit'
                       junit 'result.unit.xml'
                    }
