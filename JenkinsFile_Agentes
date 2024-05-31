@@ -121,7 +121,7 @@ pipeline
                          python3 -m flask run &
                          java -jar /home/fireblade/wiremock/wiremock-standalone-3.6.0.jar --verbose --port 9090 --root-dir $WORKSPACE/test/wiremock
                         export PYTHONPATH=.:$PYTHONPATH
-                        pytest --junitxml=result.rest.xml test/rest
+                        pytest --junitxml=result.rest.xml $WORKSPACE/test/rest
                   '''   
                   
                       junit 'result.rest.xml' 
