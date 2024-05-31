@@ -168,7 +168,7 @@ stage ('Rendimiento'){
                             } 
                         }
                         sh '''
-                          /home/fireblade/apache-jmeter-5.6.3/bin/./jmeter.sh -n -t /test/jmeter/flask.jmx -f -l flask.jtl
+                          /home/fireblade/apache-jmeter-5.6.3/bin/./jmeter.sh -n -t $WORKSPACE/test/jmeter/flask.jmx -f -l $WORKSPACE/flask.jtl
                         '''
                         perfReport sourceDataFiles: 'flask.jtl'
                         // El paso se ejecutó correctamente
