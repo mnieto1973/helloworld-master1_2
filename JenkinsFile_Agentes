@@ -96,6 +96,9 @@ pipeline
 
             }
 
+ stage('Analisis codigo'){
+            parallel{
+
  stage('Rest') {
                       agent{
              label 'windows'
@@ -187,6 +190,8 @@ stage ('Rendimiento'){
                     }
                 }
          }
+}
+}
 }
 
     }
